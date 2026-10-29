@@ -1,0 +1,412 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Kitchen</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍳</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* =========================================================
+   THEME
+   ========================================================= */
+/* Brand palette
+   #000000 Black · #FFFFFF White · #808080 Grey
+   #F4F4F5 Light Grey · #1C53E5 Blue · #E9EFFD Light Blue */
+:root{
+  --black:#000000;
+  --white:#FFFFFF;
+  --grey:#808080;
+  --light-grey:#F4F4F5;
+  --blue:#1C53E5;
+  --light-blue:#E9EFFD;
+
+  --bg:var(--light-grey);
+  --panel:var(--white);
+  --sidebar:var(--black);
+  --sidebar-2:#141414;
+  --sidebar-text:var(--white);
+  --sidebar-muted:var(--grey);
+  --accent:var(--blue);
+  --accent-soft:rgba(28,83,229,.28);
+  --accent-light:var(--light-blue);
+  --text:var(--black);
+  --muted:var(--grey);
+  --line:#E4E4E7;
+  --shadow:0 1px 2px rgba(0,0,0,.04),0 8px 24px rgba(0,0,0,.06);
+  --radius:14px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0A0A0A;--panel:#151515;--sidebar:var(--black);--sidebar-2:#1A1A1A;
+    --text:var(--white);--muted:var(--grey);--line:#262626;
+    --accent-light:rgba(28,83,229,.22);
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.35);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0A0A0A;--panel:#151515;--sidebar:var(--black);--sidebar-2:#1A1A1A;
+  --text:var(--white);--muted:var(--grey);--line:#262626;
+  --accent-light:rgba(28,83,229,.22);
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.35);
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{
+  font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;
+  background:var(--bg);color:var(--text);
+  display:flex;overflow:hidden;
+}
+
+/* =========================================================
+   SIDEBAR
+   ========================================================= */
+.sidebar{
+  width:330px;max-width:88vw;flex-shrink:0;height:100vh;
+  background:var(--sidebar);color:var(--sidebar-text);
+  display:flex;flex-direction:column;
+  transition:transform .25s ease;z-index:20;
+}
+.brand{
+  display:flex;align-items:center;gap:12px;
+  padding:22px 20px 18px;cursor:pointer;
+  border-bottom:1px solid rgba(255,255,255,.06);
+}
+.brand-mark{
+  width:42px;height:42px;border-radius:12px;
+  background:var(--accent);display:grid;place-items:center;font-size:22px;
+}
+.brand h1{font-size:20px;font-weight:800;letter-spacing:-.02em}
+.brand p{font-size:12px;color:var(--sidebar-muted);margin-top:1px}
+
+.search{margin:14px 16px 6px;position:relative}
+.search input{
+  width:100%;padding:9px 12px 9px 32px;border-radius:9px;border:1px solid rgba(255,255,255,.08);
+  background:var(--sidebar-2);color:var(--sidebar-text);font:inherit;font-size:13px;outline:none;
+}
+.search input:focus{border-color:var(--accent)}
+.search svg{position:absolute;left:10px;top:50%;transform:translateY(-50%);opacity:.5}
+
+nav{flex:1;overflow-y:auto;padding:6px 10px 20px}
+.section-title{
+  font-size:11px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;
+  color:var(--sidebar-muted);padding:16px 10px 6px;
+}
+.tab{
+  display:flex;align-items:center;gap:11px;width:100%;
+  padding:9px 10px;border-radius:10px;border:0;background:transparent;
+  color:inherit;font:inherit;text-align:left;cursor:pointer;text-decoration:none;
+  transition:background .15s;
+}
+.tab:hover{background:rgba(255,255,255,.05)}
+.tab.active{background:var(--accent)}
+.tab.active .desc{color:rgba(255,255,255,.8)}
+.tab .emoji{font-size:19px;width:26px;text-align:center;flex-shrink:0}
+.tab .label{flex:1;min-width:0}
+.tab .name{font-size:14px;font-weight:600;display:block}
+.tab .desc{font-size:13.5px;margin-top:1px;color:var(--sidebar-muted);display:block;line-height:1.35}
+.tab .ext{opacity:.5;flex-shrink:0}
+.tab:hover .ext{opacity:.9}
+
+.sidebar-foot{
+  padding:12px 16px;border-top:1px solid rgba(255,255,255,.06);
+  display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--sidebar-muted);
+}
+.icon-btn{
+  background:transparent;border:1px solid rgba(255,255,255,.1);color:var(--sidebar-text);
+  border-radius:8px;padding:6px 9px;cursor:pointer;font:inherit;font-size:12px;
+}
+.icon-btn:hover{border-color:var(--accent)}
+
+/* =========================================================
+   MAIN
+   ========================================================= */
+main{flex:1;display:flex;flex-direction:column;min-width:0;height:100vh}
+.topbar{
+  display:flex;align-items:center;gap:12px;
+  padding:12px 20px;background:var(--panel);border-bottom:1px solid var(--line);
+  min-height:60px;
+}
+.menu-btn{display:none;background:none;border:0;color:var(--text);cursor:pointer;padding:4px}
+.crumb{flex:1;min-width:0}
+.crumb .sec{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:600}
+.crumb .ttl{font-size:17px;font-weight:700;letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.actions{display:flex;gap:8px}
+.btn{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:8px 12px;border-radius:9px;border:1px solid var(--line);
+  background:var(--panel);color:var(--text);font:inherit;font-size:13px;font-weight:500;
+  cursor:pointer;text-decoration:none;white-space:nowrap;
+}
+.btn:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-light)}
+
+.stage{flex:1;position:relative;overflow:hidden}
+.stage iframe{width:100%;height:100%;border:0;background:#fff;display:block}
+
+/* Home */
+.home{height:100%;overflow-y:auto;padding:40px 32px 60px}
+.home-inner{max-width:1000px;margin:0 auto}
+.hero h2{color:var(--text);font-size:clamp(28px,4vw,40px);font-weight:800;letter-spacing:-.03em}
+.hero p{color:var(--muted);margin-top:8px;font-size:15px;max-width:560px;line-height:1.5}
+.home-section{margin-top:36px}
+.home-section h3{font-size:12px;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);font-weight:600;margin-bottom:12px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px}
+.card{
+  background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);
+  padding:18px;cursor:pointer;text-align:left;font:inherit;color:inherit;text-decoration:none;
+  box-shadow:var(--shadow);transition:transform .15s,border-color .15s;display:block;
+}
+.card:hover{transform:translateY(-2px);border-color:var(--accent);background:var(--accent-light)}
+.card .emoji{font-size:26px;width:48px;height:48px;border-radius:12px;background:var(--accent-light);display:grid;place-items:center}
+.card:hover .emoji{background:var(--panel)}
+.card .name{font-weight:600;font-size:15px;margin-top:10px;display:flex;align-items:center;gap:6px}
+.card .desc{color:var(--muted);font-size:14.5px;margin-top:3px;line-height:1.4}
+
+/* Missing-file notice */
+.notice{height:100%;display:grid;place-items:center;padding:24px;text-align:center}
+.notice-box{max-width:440px}
+.notice-box .emoji{font-size:48px}
+.notice-box h3{font-size:20px;font-weight:700;margin-top:10px}
+.notice-box p{color:var(--muted);margin-top:8px;line-height:1.5;font-size:14px}
+.notice-box code{background:var(--accent-light);color:var(--accent);padding:2px 6px;border-radius:5px;font-size:13px}
+
+.scrim{display:none}
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+@media (max-width:820px){
+  .sidebar{position:fixed;left:0;top:0;transform:translateX(-100%)}
+  body.nav-open .sidebar{transform:none}
+  body.nav-open .scrim{display:block;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:15}
+  .menu-btn{display:block}
+  .topbar{padding:10px 16px}
+  .btn .btn-text{display:none}
+  .home{padding:28px 16px 48px}
+}
+</style>
+</head>
+<body>
+
+<aside class="sidebar" id="sidebar">
+  <div class="brand" id="homeLink" title="Home">
+    <div class="brand-mark">🍳</div>
+    <div>
+      <h1>The Kitchen</h1>
+      <p>Team tools &amp; processors</p>
+    </div>
+  </div>
+  <div class="search">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+    <input id="filter" type="search" placeholder="Find a tool…" autocomplete="off">
+  </div>
+  <nav id="nav"></nav>
+  <div class="sidebar-foot">
+    <span id="toolCount"></span>
+    <button class="icon-btn" id="themeBtn" title="Toggle light/dark">◐ Theme</button>
+  </div>
+</aside>
+<div class="scrim" id="scrim"></div>
+
+<main>
+  <header class="topbar">
+    <button class="menu-btn" id="menuBtn" aria-label="Open menu">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+    </button>
+    <div class="crumb">
+      <div class="sec" id="crumbSec">Welcome</div>
+      <div class="ttl" id="crumbTtl">The Kitchen</div>
+    </div>
+    <div class="actions" id="actions" hidden>
+      <button class="btn" id="reloadBtn" title="Reset this tool">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/></svg>
+        <span class="btn-text">Reset</span>
+      </button>
+      <a class="btn" id="popBtn" target="_blank" rel="noopener" title="Open in a new tab">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 4h6v6M20 4l-9 9M19 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h5"/></svg>
+        <span class="btn-text">New tab</span>
+      </a>
+    </div>
+  </header>
+  <section class="stage" id="stage"></section>
+</main>
+
+<script>
+/* =========================================================
+   MENU CONFIG — the only part you need to edit.
+
+   Each tool:
+     id    : short unique slug (used in the URL, e.g. index.html#banana)
+     emoji : sidebar icon
+     name  : tool name
+     desc  : one-line description
+     src   : path to the tool's HTML file (relative to this file)
+       — OR —
+     url   : an outside link. Opens in a new browser tab by default.
+     embed : true to show an outside link inside The Kitchen instead
+             (only works if that site allows embedding).
+   ========================================================= */
+const MENU = [
+  {
+    section: "",   // ungrouped — shows at the top with no heading
+    tools: [
+      { id:"giraffe", emoji:"🦒", name:"Giraffe", desc:"Final Import Formatter", url:"https://claude.ai/project/019f6c9f-0b27-7677-b174-08f66d3f5ee4" }
+    ]
+  },
+  {
+    section: "Clean It",
+    tools: [
+      { id:"banana",     emoji:"🍌", name:"Banana",     desc:"VCF to CSV Converter",            src:"tools/banana.html" },
+      { id:"pumpkin",    emoji:"🎃", name:"Pumpkin",    desc:"Phone-Cross Reference",           src:"tools/pumpkin.html" },
+      { id:"rivendell",  emoji:"🧝🏼‍♀️", name:"Rivendell",  desc:"Dupe Processor",                  src:"tools/rivendell.html" },
+      { id:"peppermint", emoji:"🍬", name:"Peppermint", desc:"Past Client Log Creator",         src:"tools/peppermint.html" },
+      { id:"turtle",     emoji:"🐢", name:"Turtle",     desc:"Contact Classification Workflow", url:"https://claude.ai/project/019f6c9a-9b35-7015-bae5-3fdf57db4793" }
+    ]
+  },
+  {
+    section: "Keep It Clean",
+    tools: [
+      { id:"bumblebee",   emoji:"🐝", name:"Bumblebee",   desc:"KIC Report + Healthscore",  src:"tools/bumblebee.html" },
+      { id:"thunderdome", emoji:"⚡", name:"Thunderdome", desc:"KIC Health Score Only",     src:"tools/thunderdome.html" }
+    ]
+  },
+  {
+    section: "Other Tools",
+    tools: [
+      { id:"anteater", emoji:"🐜", name:"Anteater", desc:"\"Other File\" Processor", src:"tools/anteater.html" },
+      { id:"spider",   emoji:"🕷️", name:"Spider",   desc:"\"Other File\" Auditor",   url:"https://claude.ai/project/01a18868-b158-770c-b2ad-8b5192e4e849" }
+    ]
+  }
+];
+</script>
+
+<script>
+/* =========================================================
+   PORTAL LOGIC — no need to edit below.
+   ========================================================= */
+const $ = s => document.querySelector(s);
+const nav = $("#nav"), stage = $("#stage");
+const ALL = MENU.flatMap(s => s.tools.map(t => ({...t, section:s.section})));
+const extIcon = '<svg class="ext" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M14 4h6v6M20 4l-9 9M19 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h5"/></svg>';
+const isLink = t => t.url && !t.embed;
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+function buildNav(q=""){
+  q = q.trim().toLowerCase();
+  nav.innerHTML = "";
+  MENU.forEach(sec => {
+    const tools = sec.tools.filter(t => !q || (t.name+" "+t.desc+" "+sec.section).toLowerCase().includes(q));
+    if(!tools.length) return;
+    if(sec.section){
+      const h = document.createElement("div");
+      h.className = "section-title"; h.textContent = sec.section;
+      nav.appendChild(h);
+    } else {
+      const sp = document.createElement("div"); sp.style.height = "8px"; nav.appendChild(sp);
+    }
+    tools.forEach(t => {
+      const el = document.createElement(isLink(t) ? "a" : "button");
+      el.className = "tab"; el.dataset.id = t.id;
+      if(isLink(t)){ el.href = t.url; el.target = "_blank"; el.rel = "noopener"; }
+      else el.onclick = () => go(t.id);
+      el.innerHTML = `<span class="emoji">${t.emoji}</span>
+        <span class="label"><span class="name">${esc(t.name)}</span><span class="desc">${esc(t.desc)}</span></span>
+        ${isLink(t) ? extIcon : ""}`;
+      nav.appendChild(el);
+    });
+  });
+  markActive();
+}
+
+function markActive(){
+  const id = location.hash.slice(1);
+  nav.querySelectorAll(".tab").forEach(b => b.classList.toggle("active", b.dataset.id === id));
+}
+
+function go(id){
+  if(location.hash.slice(1) === id) render();
+  else location.hash = id;
+  document.body.classList.remove("nav-open");
+}
+
+function renderHome(){
+  $("#crumbSec").textContent = "Welcome";
+  $("#crumbTtl").textContent = "The Kitchen";
+  $("#actions").hidden = true;
+  document.title = "The Kitchen";
+  stage.innerHTML = `<div class="home"><div class="home-inner">
+    <div class="hero"><h2>What are we cooking?</h2>
+    <p>Pick a tool from the menu or a card below. Your files stay in your browser — nothing is uploaded anywhere.</p></div>
+    ${MENU.map(sec => `<div class="home-section">${sec.section ? `<h3>${esc(sec.section)}</h3>` : ""}<div class="grid">
+      ${sec.tools.map(t => isLink(t)
+        ? `<a class="card" href="${esc(t.url)}" target="_blank" rel="noopener"><div class="emoji">${t.emoji}</div><div class="name">${esc(t.name)} ${extIcon}</div><div class="desc">${esc(t.desc)}</div></a>`
+        : `<button class="card" data-go="${t.id}"><div class="emoji">${t.emoji}</div><div class="name">${esc(t.name)}</div><div class="desc">${esc(t.desc)}</div></button>`
+      ).join("")}
+    </div></div>`).join("")}
+  </div></div>`;
+  stage.querySelectorAll("[data-go]").forEach(c => c.onclick = () => go(c.dataset.go));
+}
+
+function renderTool(t){
+  const src = t.src || t.url;
+  $("#crumbSec").textContent = t.section || "The Kitchen";
+  $("#crumbTtl").textContent = `${t.emoji} ${t.name} — ${t.desc}`;
+  $("#actions").hidden = false;
+  $("#popBtn").href = src;
+  document.title = `${t.name} · The Kitchen`;
+
+  const load = () => {
+    stage.innerHTML = "";
+    const f = document.createElement("iframe");
+    f.src = src; f.title = t.name;
+    f.allow = "clipboard-read; clipboard-write; downloads";
+    stage.appendChild(f);
+  };
+  const missing = () => {
+    stage.innerHTML = `<div class="notice"><div class="notice-box">
+      <div class="emoji">${t.emoji}</div><h3>${esc(t.name)} isn't on the shelf yet</h3>
+      <p>The Kitchen looked for <code>${esc(src)}</code> but couldn't find it. Add the file to the repo at that path, or update its <code>src</code> in the menu config.</p>
+    </div></div>`;
+  };
+
+  // Check the file exists (works on GitHub Pages; skipped when opened locally)
+  if(t.src && location.protocol.startsWith("http")){
+    fetch(src, {method:"HEAD", cache:"no-store"})
+      .then(r => r.ok ? load() : missing())
+      .catch(load);
+  } else load();
+}
+
+function render(){
+  const id = location.hash.slice(1);
+  const t = ALL.find(x => x.id === id && !isLink(x));
+  t ? renderTool(t) : renderHome();
+  markActive();
+}
+
+/* Wiring */
+$("#homeLink").onclick = () => { history.pushState("", "", location.pathname); render(); document.body.classList.remove("nav-open"); };
+$("#filter").oninput = e => buildNav(e.target.value);
+$("#menuBtn").onclick = () => document.body.classList.add("nav-open");
+$("#scrim").onclick = () => document.body.classList.remove("nav-open");
+$("#reloadBtn").onclick = render;
+window.addEventListener("hashchange", render);
+window.addEventListener("popstate", render);
+
+/* Theme toggle (remembered per browser) */
+const root = document.documentElement;
+try { const s = localStorage.getItem("kitchen-theme"); if(s) root.dataset.theme = s; } catch(e){}
+$("#themeBtn").onclick = () => {
+  const dark = root.dataset.theme ? root.dataset.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+  root.dataset.theme = dark ? "light" : "dark";
+  try { localStorage.setItem("kitchen-theme", root.dataset.theme); } catch(e){}
+};
+
+$("#toolCount").textContent = `${ALL.filter(t=>!isLink(t)).length} tools · ${ALL.filter(isLink).length} links`;
+buildNav();
+render();
+</script>
+</body>
+</html>
