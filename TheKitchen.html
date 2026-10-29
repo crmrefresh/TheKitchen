@@ -242,12 +242,15 @@ main{flex:1;display:flex;flex-direction:column;min-width:0;height:100vh}
      emoji : sidebar icon
      name  : tool name
      desc  : one-line description
-     src   : path to the tool's HTML file (relative to this file)
+     src   : the tool's live GitHub Pages address (or a path relative to this file)
        — OR —
      url   : an outside link. Opens in a new browser tab by default.
      embed : true to show an outside link inside The Kitchen instead
              (only works if that site allows embedding).
    ========================================================= */
+// Where the tools live on GitHub Pages. Each tool is GH + "Repo/File.html".
+const GH = "https://crmrefresh.github.io/";
+
 const MENU = [
   {
     section: "",   // ungrouped — shows at the top with no heading
@@ -258,24 +261,24 @@ const MENU = [
   {
     section: "Clean It",
     tools: [
-      { id:"banana",     emoji:"🍌", name:"Banana",     desc:"VCF to CSV Converter",            src:"tools/banana.html" },
-      { id:"pumpkin",    emoji:"🎃", name:"Pumpkin",    desc:"Phone-Cross Reference",           src:"tools/pumpkin.html" },
-      { id:"rivendell",  emoji:"🧝🏼‍♀️", name:"Rivendell",  desc:"Dupe Processor",                  src:"tools/rivendell.html" },
-      { id:"peppermint", emoji:"🍬", name:"Peppermint", desc:"Past Client Log Creator",         src:"tools/peppermint.html" },
+      { id:"banana",     emoji:"🍌", name:"Banana",     desc:"VCF to CSV Converter",            src:GH+"Banana/Banana.html" },
+      { id:"pumpkin",    emoji:"🎃", name:"Pumpkin",    desc:"Phone-Cross Reference",           src:GH+"Pumpkin/Pumpkin.html" },
+      { id:"rivendell",  emoji:"🧝🏼‍♀️", name:"Rivendell",  desc:"Dupe Processor",                  src:GH+"Rivendell/Rivendell.html" },
+      { id:"peppermint", emoji:"🍬", name:"Peppermint", desc:"Past Client Log Creator",         src:GH+"Peppermint/Peppermint.html" },
       { id:"turtle",     emoji:"🐢", name:"Turtle",     desc:"Contact Classification Workflow", url:"https://claude.ai/project/019f6c9a-9b35-7015-bae5-3fdf57db4793" }
     ]
   },
   {
     section: "Keep It Clean",
     tools: [
-      { id:"bumblebee",   emoji:"🐝", name:"Bumblebee",   desc:"KIC Report + Healthscore",  src:"tools/bumblebee.html" },
-      { id:"thunderdome", emoji:"⚡", name:"Thunderdome", desc:"KIC Health Score Only",     src:"tools/thunderdome.html" }
+      { id:"bumblebee",   emoji:"🐝", name:"Bumblebee",   desc:"KIC Report + Healthscore",  src:GH+"Bumblebee/Bumblebee.html" },
+      { id:"thunderdome", emoji:"⚡", name:"Thunderdome", desc:"KIC Health Score Only",     src:GH+"Thunderdome/Thunderdome.html" }
     ]
   },
   {
     section: "Other Tools",
     tools: [
-      { id:"anteater", emoji:"🐜", name:"Anteater", desc:"\"Other File\" Processor", src:"tools/anteater.html" },
+      { id:"anteater", emoji:"🐜", name:"Anteater", desc:"\"Other File\" Processor", src:GH+"Anteater/Anteater.html" },
       { id:"spider",   emoji:"🕷️", name:"Spider",   desc:"\"Other File\" Auditor",   url:"https://claude.ai/project/01a18868-b158-770c-b2ad-8b5192e4e849" }
     ]
   }
@@ -361,13 +364,13 @@ function renderTool(t){
     stage.innerHTML = "";
     const f = document.createElement("iframe");
     f.src = src; f.title = t.name;
-    f.allow = "clipboard-read; clipboard-write; downloads";
+    f.allow = "clipboard-read; clipboard-write";
     stage.appendChild(f);
   };
   const missing = () => {
     stage.innerHTML = `<div class="notice"><div class="notice-box">
       <div class="emoji">${t.emoji}</div><h3>${esc(t.name)} isn't on the shelf yet</h3>
-      <p>The Kitchen looked for <code>${esc(src)}</code> but couldn't find it. Add the file to the repo at that path, or update its <code>src</code> in the menu config.</p>
+      <p>The Kitchen looked for <code>${esc(src)}</code> but couldn't find it. Check that the tool's GitHub Pages site is live at that address, or update its <code>src</code> in the menu config.</p>
     </div></div>`;
   };
 
